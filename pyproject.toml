@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "swift-generator"
+version = "0.1.0"
+description = "Generate Swift code using OpenAPI"
+authors = ["Spencer Bard <sbard26@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/spencerbard/swift-generator"
+keywords = ["pydantic", "swift", "swiftdata", "converter", "openapi"]
+
+[tool.poetry.dependencies]
+python = "3.12"
+pydantic = "^2.0"
+pyyaml = "^6.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
