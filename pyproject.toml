@@ -9,13 +9,51 @@ repository = "https://github.com/spencerbard/swift-generator"
 keywords = ["pydantic", "swift", "swiftdata", "converter", "openapi"]
 
 [tool.poetry.dependencies]
+openapi-core = "0.19.4"
 python = "3.12"
 pydantic = "^2.0"
 pyyaml = "^6.0"
 
 [tool.poetry.dev-dependencies]
+mypy = "^1.14.1"
 pytest = "^7.0"
+ruff = "^0.7.3"
+types-PyYAML = "^6.0.12"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+filterwarnings = ["ignore::DeprecationWarning:google.oauth2._client"]
+markers = ["skip_in_ci: marks tests to be skipped in CI"]
+
+[tool.mypy]
+plugins = []
+strict = true
+check_untyped_defs = true
+ignore_missing_imports = false
+strict_optional = true
+warn_unused_ignores = true
+warn_return_any = true
+disallow_incomplete_defs = true
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+
+[tool.ruff]
+line-length = 124
+
+[tool.ruff.lint]
+select = [
+    "I",
+    "F",
+    "E",
+] # "I" for import sorting, "F" for formatting, "E" for error codes
+unfixable = ["F401"]
+
+[tool.ruff.format]
+skip-magic-trailing-comma = true

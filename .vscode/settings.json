@@ -1,0 +1,5 @@
+{
+  "yaml.schemas": {
+    "file:///Users/spencerbard/.cursor/extensions/mermade.openapi-lint-1.2.0/schemas/openapi-3.0.json": "file:///Users/spencerbard/code/swift_generator/examples/openapi_v3/example_openapi.yaml"
+  }
+}
