@@ -1,0 +1,1751 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "FastAPI",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/auth/signup": {
+      "post": {
+        "summary": "Signup",
+        "operationId": "signup_auth_signup_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignupRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Login",
+        "operationId": "login_auth_login_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignupRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "summary": "Logout",
+        "operationId": "logout_auth_logout_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "title": "Response Logout Auth Logout Post"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "summary": "Refresh",
+        "operationId": "refresh_auth_refresh_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/recipe_source/create": {
+      "post": {
+        "tags": [
+          "recipes"
+        ],
+        "summary": "Create Recipe Source",
+        "operationId": "create_recipe_source_recipe_source_create_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRecipeSourceRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecipeResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/recipe_source/url_content/retry": {
+      "post": {
+        "tags": [
+          "recipes"
+        ],
+        "summary": "Retry Recipe",
+        "operationId": "retry_recipe_recipe_source_url_content_retry_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecipeSourceTaskRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "title": "Response Retry Recipe Recipe Source Url Content Retry Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/recipe_source/process": {
+      "post": {
+        "tags": [
+          "recipes"
+        ],
+        "summary": "Process Recipe Source",
+        "operationId": "process_recipe_source_recipe_source_process_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecipeSourceTaskRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "title": "Response Process Recipe Source Recipe Source Process Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/recipes": {
+      "get": {
+        "tags": [
+          "recipes"
+        ],
+        "summary": "List Recipes For User",
+        "operationId": "list_recipes_for_user_recipes_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/RecipeResponse"
+                  },
+                  "type": "array",
+                  "title": "Response List Recipes For User Recipes Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/recipes/{recipe_id}": {
+      "post": {
+        "tags": [
+          "recipes"
+        ],
+        "summary": "Update Recipe",
+        "operationId": "update_recipe_recipes__recipe_id__post",
+        "parameters": [
+          {
+            "name": "recipe_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Recipe Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecipeUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecipeResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "recipes"
+        ],
+        "summary": "Delete Recipe",
+        "operationId": "delete_recipe_recipes__recipe_id__delete",
+        "parameters": [
+          {
+            "name": "recipe_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Recipe Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/groceries": {
+      "get": {
+        "tags": [
+          "groceries"
+        ],
+        "summary": "List Groceries For User",
+        "operationId": "list_groceries_for_user_groceries_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroceryListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/groceries/invite": {
+      "post": {
+        "tags": [
+          "groceries"
+        ],
+        "summary": "Invite User To Groceries",
+        "operationId": "invite_user_to_groceries_groceries_invite_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InviteUserRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroceryListOutgoingInviteResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/groceries/invites": {
+      "get": {
+        "tags": [
+          "groceries"
+        ],
+        "summary": "List Incoming Invites For User",
+        "operationId": "list_incoming_invites_for_user_groceries_invites_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/GroceryListIncomingInviteResponse"
+                  },
+                  "type": "array",
+                  "title": "Response List Incoming Invites For User Groceries Invites Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/groceries/invites/outgoing": {
+      "get": {
+        "tags": [
+          "groceries"
+        ],
+        "summary": "List Outgoing Invites For User",
+        "operationId": "list_outgoing_invites_for_user_groceries_invites_outgoing_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/GroceryListOutgoingInviteResponse"
+                  },
+                  "type": "array",
+                  "title": "Response List Outgoing Invites For User Groceries Invites Outgoing Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/groceries/invites/accept": {
+      "post": {
+        "tags": [
+          "groceries"
+        ],
+        "summary": "Accept Invite",
+        "operationId": "accept_invite_groceries_invites_accept_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RespondToInviteRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/GroceryItemResponse"
+                  },
+                  "type": "array",
+                  "title": "Response Accept Invite Groceries Invites Accept Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/groceries/invites/reject": {
+      "post": {
+        "tags": [
+          "groceries"
+        ],
+        "summary": "Reject Invite",
+        "operationId": "reject_invite_groceries_invites_reject_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RespondToInviteRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/groceries/invites/cancel": {
+      "post": {
+        "tags": [
+          "groceries"
+        ],
+        "summary": "Cancel Invite",
+        "operationId": "cancel_invite_groceries_invites_cancel_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RespondToInviteRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AuthResponse": {
+        "properties": {
+          "user": {
+            "$ref": "#/components/schemas/UserResponse"
+          },
+          "session": {
+            "$ref": "#/components/schemas/SessionResponse"
+          }
+        },
+        "type": "object",
+        "required": [
+          "user",
+          "session"
+        ],
+        "title": "AuthResponse"
+      },
+      "CountMeasurementSchema": {
+        "properties": {
+          "value": {
+            "type": "number",
+            "title": "Value",
+            "description": "The value of the measurement i.e. '3' for '3 cloves of garlic'"
+          },
+          "unit_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unit Type",
+            "description": "The unit of measurement, if it exists"
+          }
+        },
+        "type": "object",
+        "required": [
+          "value"
+        ],
+        "title": "CountMeasurementSchema"
+      },
+      "CreateRecipeSourceRequest": {
+        "properties": {
+          "recipe_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recipe Id"
+          },
+          "source_type": {
+            "$ref": "#/components/schemas/RecipeSourceType"
+          },
+          "source_value": {
+            "type": "string",
+            "title": "Source Value"
+          }
+        },
+        "type": "object",
+        "required": [
+          "source_type",
+          "source_value"
+        ],
+        "title": "CreateRecipeSourceRequest"
+      },
+      "GroceryItemResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "position": {
+            "type": "number",
+            "title": "Position"
+          },
+          "is_done": {
+            "type": "boolean",
+            "title": "Is Done"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "position",
+          "is_done",
+          "updated_at"
+        ],
+        "title": "GroceryItemResponse"
+      },
+      "GroceryListIncomingInviteResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "invited_by_user_email": {
+            "type": "string",
+            "title": "Invited By User Email"
+          },
+          "status": {
+            "$ref": "#/components/schemas/GroceryListInviteStatus"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "invited_by_user_email",
+          "status"
+        ],
+        "title": "GroceryListIncomingInviteResponse"
+      },
+      "GroceryListInviteStatus": {
+        "type": "string",
+        "enum": [
+          "PENDING",
+          "ACCEPTED",
+          "REJECTED",
+          "CANCELLED"
+        ],
+        "title": "GroceryListInviteStatus"
+      },
+      "GroceryListMemberResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "user_id": {
+            "type": "string",
+            "title": "User Id"
+          },
+          "user_email": {
+            "type": "string",
+            "title": "User Email"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "user_id",
+          "user_email"
+        ],
+        "title": "GroceryListMemberResponse"
+      },
+      "GroceryListOutgoingInviteResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "invited_user_email": {
+            "type": "string",
+            "title": "Invited User Email"
+          },
+          "status": {
+            "$ref": "#/components/schemas/GroceryListInviteStatus"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "invited_user_email",
+          "status"
+        ],
+        "title": "GroceryListOutgoingInviteResponse"
+      },
+      "GroceryListResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "members": {
+            "items": {
+              "$ref": "#/components/schemas/GroceryListMemberResponse"
+            },
+            "type": "array",
+            "title": "Members"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/GroceryItemResponse"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "members",
+          "items"
+        ],
+        "title": "GroceryListResponse"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "InviteUserRequest": {
+        "properties": {
+          "email": {
+            "type": "string",
+            "title": "Email"
+          }
+        },
+        "type": "object",
+        "required": [
+          "email"
+        ],
+        "title": "InviteUserRequest"
+      },
+      "MealType": {
+        "type": "string",
+        "enum": [
+          "breakfast",
+          "lunch",
+          "dinner",
+          "snack",
+          "dessert",
+          "drink",
+          "other"
+        ],
+        "title": "MealType"
+      },
+      "MealTypeEnum": {
+        "type": "string",
+        "enum": [
+          "breakfast",
+          "lunch",
+          "dinner",
+          "snack",
+          "dessert",
+          "drink",
+          "other"
+        ],
+        "title": "MealTypeEnum"
+      },
+      "OtherMeasurementSchema": {
+        "properties": {
+          "value": {
+            "type": "string",
+            "title": "Value",
+            "description": "any other types of measurements not covered above"
+          }
+        },
+        "type": "object",
+        "required": [
+          "value"
+        ],
+        "title": "OtherMeasurementSchema"
+      },
+      "RecipeIngredientResponse": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "The name of the ingredient (e.g., 'flour')"
+          },
+          "optional": {
+            "type": "boolean",
+            "title": "Optional",
+            "description": "Whether the ingredient is optional"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes",
+            "description": "Additional notes or tips for this ingredient"
+          },
+          "order": {
+            "type": "integer",
+            "title": "Order",
+            "description": "The order of the ingredient in the recipe"
+          },
+          "original_text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Original Text",
+            "description": "The original text of the ingredient from the source"
+          },
+          "count_measurement": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CountMeasurementSchema"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Specifies the count or unit-based measurement for the ingredient(e.g., '2 bananas', '3 cloves of garlic')."
+          },
+          "weight_measurement": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/WeightMeasurementSchema"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Specifies the weight-based measurement for the ingredient, including unit and value(e.g., '200 grams', '1 lb')."
+          },
+          "volume_measurement": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/VolumeMeasurementSchema"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Specifies the volume-based measurement for the ingredientincluding unit and value (e.g., '1 cup', '250 ml')."
+          },
+          "other_measurement": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OtherMeasurementSchema"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Specifies any other type of measurement not covered by weight, volume, or count-based measurements. Examples include 'a pinch', 'a handful', or '2:1 ratio'."
+          },
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "description": "The unique identifier of the ingredient"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "optional",
+          "order",
+          "id"
+        ],
+        "title": "RecipeIngredientResponse"
+      },
+      "RecipeIngredientSectionResponse": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "The name of the section"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description",
+            "description": "A description of the section"
+          },
+          "order": {
+            "type": "integer",
+            "title": "Order",
+            "description": "The order of the section in the recipe"
+          },
+          "original_text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Original Text",
+            "description": "The original text of the ingredient from the source"
+          },
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "description": "The unique identifier of the recipe section"
+          },
+          "ingredients": {
+            "items": {
+              "$ref": "#/components/schemas/RecipeIngredientResponse"
+            },
+            "type": "array",
+            "title": "Ingredients",
+            "description": "The list of ingredients for the section"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "order",
+          "id",
+          "ingredients"
+        ],
+        "title": "RecipeIngredientSectionResponse"
+      },
+      "RecipeParsingStatus": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "incomplete",
+          "partially_complete",
+          "complete"
+        ],
+        "title": "RecipeParsingStatus"
+      },
+      "RecipeResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "description": "The unique identifier of the recipe"
+          },
+          "status": {
+            "$ref": "#/components/schemas/RecipeParsingStatus",
+            "description": "The status of the recipe"
+          },
+          "parsing_incomplete_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parsing Incomplete Reason",
+            "description": "The reason the recipe is incomplete"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name",
+            "description": "The name of the recipe"
+          },
+          "creator_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Creator Name",
+            "description": "The creator name of the recipe"
+          },
+          "last_accessed_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Accessed At",
+            "description": "The last time this recipe was accessed"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At",
+            "description": "The date and time this recipe was created"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At",
+            "description": "The last time this recipe was updated"
+          },
+          "most_recent_activity_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Most Recent Activity At",
+            "description": "The last time this recipe was updated or accessed"
+          },
+          "current_version": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RecipeVersionResponse"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The current version of the recipe"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RecipeSourceResponse"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The source of the recipe"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "status",
+          "created_at",
+          "updated_at",
+          "most_recent_activity_at"
+        ],
+        "title": "RecipeResponse"
+      },
+      "RecipeSourceResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "description": "The unique identifier of the recipe source"
+          },
+          "source_type": {
+            "$ref": "#/components/schemas/RecipeSourceType",
+            "description": "The type of the recipe source"
+          },
+          "source_value": {
+            "type": "string",
+            "title": "Source Value",
+            "description": "The value of the recipe source"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "description": "The status of the recipe source"
+          },
+          "image_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Image Url",
+            "description": "The image URL of the recipe source"
+          },
+          "has_complete_ingredients": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Has Complete Ingredients",
+            "description": "Whether the recipe source has complete ingredients"
+          },
+          "has_complete_instructions": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Has Complete Instructions",
+            "description": "Whether the recipe source has complete instructions"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "source_type",
+          "source_value",
+          "status"
+        ],
+        "title": "RecipeSourceResponse"
+      },
+      "RecipeSourceTaskRequest": {
+        "properties": {
+          "recipe_source_id": {
+            "type": "string",
+            "title": "Recipe Source Id"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Timestamp"
+          }
+        },
+        "type": "object",
+        "required": [
+          "recipe_source_id",
+          "timestamp"
+        ],
+        "title": "RecipeSourceTaskRequest"
+      },
+      "RecipeSourceType": {
+        "type": "string",
+        "enum": [
+          "url_content",
+          "prompt_content"
+        ],
+        "title": "RecipeSourceType"
+      },
+      "RecipeStepResponse": {
+        "properties": {
+          "order": {
+            "type": "integer",
+            "title": "Order",
+            "description": "The order of the step in the recipe"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description",
+            "description": "Description of the step (e.g., 'Mix flour and water in a bowl until combined')"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title",
+            "description": "Title of the step (e.g., 'Mix Flour and Water')"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes",
+            "description": "Additional notes or tips for this step"
+          },
+          "image_urls": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Image Urls",
+            "description": "The URLs of any images for the step"
+          },
+          "original_text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Original Text",
+            "description": "The original text of the ingredient from the source"
+          },
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "description": "The unique identifier of the recipe step"
+          }
+        },
+        "type": "object",
+        "required": [
+          "order",
+          "description",
+          "id"
+        ],
+        "title": "RecipeStepResponse"
+      },
+      "RecipeStepSectionResponse": {
+        "properties": {
+          "order": {
+            "type": "integer",
+            "title": "Order",
+            "description": "The order of the section in the recipe"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title",
+            "description": "Title of the section (e.g., 'Make the Crispy Tofu')"
+          },
+          "original_text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Original Text",
+            "description": "The original text of the ingredient from the source"
+          },
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "description": "The unique identifier of the recipe step section"
+          },
+          "steps": {
+            "items": {
+              "$ref": "#/components/schemas/RecipeStepResponse"
+            },
+            "type": "array",
+            "title": "Steps",
+            "description": "The list of steps for the section"
+          }
+        },
+        "type": "object",
+        "required": [
+          "order",
+          "title",
+          "id",
+          "steps"
+        ],
+        "title": "RecipeStepSectionResponse"
+      },
+      "RecipeUpdateRequest": {
+        "properties": {
+          "last_accessed_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Accessed At",
+            "description": "The last time this recipe was accessed"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name",
+            "description": "The name of the recipe"
+          },
+          "meal_type": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MealType"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The type of meal the recipe is for"
+          },
+          "servings": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Servings",
+            "description": "The number of servings the recipe makes"
+          },
+          "image_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Image Url",
+            "description": "The URL of the image for the recipe"
+          },
+          "edit_notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Edit Notes",
+            "description": "The notes for the recipe"
+          }
+        },
+        "type": "object",
+        "title": "RecipeUpdateRequest"
+      },
+      "RecipeVersionResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "description": "The unique identifier of the recipe version"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "The name of the recipe"
+          },
+          "creator_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Creator Name",
+            "description": "The name of the recipe creator"
+          },
+          "image_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Image Url",
+            "description": "The URL of an image for the recipe"
+          },
+          "ingredient_sections": {
+            "items": {
+              "$ref": "#/components/schemas/RecipeIngredientSectionResponse"
+            },
+            "type": "array",
+            "title": "Ingredient Sections",
+            "description": "The list of sections of ingredients for the recipe"
+          },
+          "step_sections": {
+            "items": {
+              "$ref": "#/components/schemas/RecipeStepSectionResponse"
+            },
+            "type": "array",
+            "title": "Step Sections",
+            "description": "The list of sections of steps for the recipe"
+          },
+          "meal_type": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MealTypeEnum"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The type of meal for the recipe"
+          },
+          "servings": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Servings",
+            "description": "The number of servings for the recipe"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "ingredient_sections",
+          "step_sections"
+        ],
+        "title": "RecipeVersionResponse"
+      },
+      "RefreshRequest": {
+        "properties": {
+          "refresh_token": {
+            "type": "string",
+            "title": "Refresh Token"
+          }
+        },
+        "type": "object",
+        "required": [
+          "refresh_token"
+        ],
+        "title": "RefreshRequest"
+      },
+      "RespondToInviteRequest": {
+        "properties": {
+          "invite_id": {
+            "type": "string",
+            "title": "Invite Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "invite_id"
+        ],
+        "title": "RespondToInviteRequest"
+      },
+      "SessionResponse": {
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "title": "Access Token"
+          },
+          "refresh_token": {
+            "type": "string",
+            "title": "Refresh Token"
+          },
+          "expires_in": {
+            "type": "integer",
+            "title": "Expires In"
+          }
+        },
+        "type": "object",
+        "required": [
+          "access_token",
+          "refresh_token",
+          "expires_in"
+        ],
+        "title": "SessionResponse"
+      },
+      "SignupRequest": {
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "title": "Email"
+          },
+          "password": {
+            "type": "string",
+            "title": "Password"
+          }
+        },
+        "type": "object",
+        "required": [
+          "email",
+          "password"
+        ],
+        "title": "SignupRequest"
+      },
+      "UserResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "email"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id"
+        ],
+        "title": "UserResponse"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "VolumeMeasurementSchema": {
+        "properties": {
+          "value": {
+            "type": "number",
+            "title": "Value",
+            "description": "The value of the measurement i.e. '1' for '1 cup'"
+          },
+          "unit_type": {
+            "$ref": "#/components/schemas/VolumeUnitTypeEnum"
+          }
+        },
+        "type": "object",
+        "required": [
+          "value",
+          "unit_type"
+        ],
+        "title": "VolumeMeasurementSchema"
+      },
+      "VolumeUnitTypeEnum": {
+        "type": "string",
+        "enum": [
+          "tsp",
+          "tbsp",
+          "fl oz",
+          "cup",
+          "pt",
+          "qt",
+          "gal",
+          "ml",
+          "l"
+        ],
+        "title": "VolumeUnitTypeEnum"
+      },
+      "WeightMeasurementSchema": {
+        "properties": {
+          "value": {
+            "type": "number",
+            "title": "Value",
+            "description": "The value of the measurement i.e. '200' for '200 grams'"
+          },
+          "unit_type": {
+            "$ref": "#/components/schemas/WeightUnitTypeEnum"
+          }
+        },
+        "type": "object",
+        "required": [
+          "value",
+          "unit_type"
+        ],
+        "title": "WeightMeasurementSchema"
+      },
+      "WeightUnitTypeEnum": {
+        "type": "string",
+        "enum": [
+          "oz",
+          "lb",
+          "mg",
+          "g",
+          "kg"
+        ],
+        "title": "WeightUnitTypeEnum"
+      }
+    }
+  }
+}

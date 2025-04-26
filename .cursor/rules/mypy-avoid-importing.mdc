@@ -1,0 +1,10 @@
+---
+description: Determining which type annotations to use
+globs: *.py
+---
+
+# Your rule content
+
+- Prefer to use the built-in `dict` type over importing `Dict`
+- Prefer to use the built-in `list` type over importing `List`
+- Prefer to use the imported `Self` type over using the quoted "MyClassName"

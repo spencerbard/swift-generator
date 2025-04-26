@@ -1,6 +1,8 @@
 from typing import Any, Dict, List
 
+from src.jsonschema.JSONSchema import EnumSchemaType, JSONSchema
 from src.openapi.OpenAPISpec import OpenAPISpec
+from src.openapi.schemas.Schema import Schema
 from src.utils import to_camel_case
 
 
@@ -15,14 +17,14 @@ class OpenAPISwiftModelGenerator:
         """Returns the import statements for the SwiftData models."""
         return "\n".join(["import Foundation", "import SwiftData"])
 
-    def _handle_simple_schema(self, schema: Dict[str, Any]) -> List[str]:
+    def _handle_simple_schema(self, schema: Schema) -> List[str]:
         """Handle simple schemas without object properties."""
         # Handle enums separately
-        if "enum" in schema:
+        if schema.type == "enum":
             return self._handle_enum_schema(schema)
 
         # Get the Swift type for this schema
-        openapi_type = schema.get("type", "string")
+        openapi_type = schema.type
         swift_type = self._openapi_type_to_swift(schema, True)
 
         swift_code = []
@@ -30,8 +32,8 @@ class OpenAPISwiftModelGenerator:
         swift_code.append(f"    var value: {swift_type}")
 
         # Add description as a comment if available
-        if "description" in schema:
-            swift_code.insert(0, f"    // {schema['description']}")
+        if schema.description:
+            swift_code.insert(0, f"    // {schema.description}")
 
         # Add initializer with the correct type
         swift_code.append("")
@@ -54,42 +56,43 @@ class OpenAPISwiftModelGenerator:
 
         return swift_code
 
-    def _handle_enum_schema(self, schema: Dict[str, Any]) -> List[str]:
+    def _handle_enum_schema(self, schema: Schema) -> List[str]:
         """Generate Swift code for an enum schema."""
         swift_code = []
 
         # Get the base type of the enum
-        base_type = schema.get("type", "string")
+        base_type = schema.type
 
         # Add description as a comment if available
-        if "description" in schema:
-            swift_code.append(f"// {schema['description']}")
+        if schema.description:
+            swift_code.append(f"// {schema.description}")
 
         # For string enums, we create a proper Swift enum
         if base_type == "string":
             # Create a Swift enum with String raw value and Codable conformance
             swift_code.append("enum Value: String, Codable {")
 
-            # Add enum cases
-            for value in schema["enum"]:
-                # Handle values with spaces or special characters for case name
-                # First convert to camelCase for the case name
-                case_name = to_camel_case(value)
+            if schema.enum:
+                # Add enum cases
+                for value in schema.enum:
+                    # Handle values with spaces or special characters for case name
+                    # First convert to camelCase for the case name
+                    case_name = to_camel_case(str(value))
 
-                # Remove spaces and special characters to ensure a valid Swift identifier
-                case_name = "".join(c for c in case_name if c.isalnum())
+                    # Remove spaces and special characters to ensure a valid Swift identifier
+                    case_name = "".join(c for c in case_name if c.isalnum())
 
-                # Ensure case name doesn't start with a digit
-                if case_name and case_name[0].isdigit():
-                    case_name = "value" + case_name
+                    # Ensure case name doesn't start with a digit
+                    if case_name and case_name[0].isdigit():
+                        case_name = "value" + case_name
 
-                # Handle empty case name (if original value was just special chars)
-                if not case_name:
-                    case_name = f"value{len(swift_code)}"  # Use index as fallback
+                    # Handle empty case name (if original value was just special chars)
+                    if not case_name:
+                        case_name = f"value{len(swift_code)}"  # Use index as fallback
 
-                swift_code.append(f'    case {case_name} = "{value}"')
+                    swift_code.append(f'    case {case_name} = "{value}"')
 
-            swift_code.append("}")
+                swift_code.append("}")
 
         # For numeric or boolean enums, we still need to use a typealias approach
         # since Swift enums can't have raw values of arbitrary numbers
@@ -98,29 +101,36 @@ class OpenAPISwiftModelGenerator:
             swift_code.append(f"typealias Value = {swift_base_type}")
             swift_code.append("")
 
-            # Add static constants for each enum value
-            for value in schema["enum"]:
-                # Create a constant name (prefix with type for clarity)
-                const_name = f"{base_type}_{value}".upper()
-                # Remove any spaces or special characters from constant name
-                const_name = "".join(c for c in const_name if c.isalnum() or c == "_")
-                swift_code.append(f"let {const_name}: {swift_base_type} = {value}")
+            if schema.enum:
+                # Add static constants for each enum value
+                for value in schema.enum:
+                    # Create a constant name (prefix with type for clarity)
+                    const_name = f"{base_type}_{value}".upper()
+                    # Remove any spaces or special characters from constant name
+                    const_name = "".join(c for c in const_name if c.isalnum() or c == "_")
+                    swift_code.append(f"let {const_name}: {swift_base_type} = {value}")
 
         return swift_code
 
-    def _handle_array_schema(self, schema: Dict[str, Any]) -> List[str]:
+    def _handle_array_schema(self, schema: Schema) -> List[str]:
         """Handle array type schemas."""
         # Get the item type from the array schema
-        item_schema = schema["items"]
+        item_schema = schema.items
         item_type = "Any"
 
+        if not item_schema:
+            raise ValueError("Array schema must have an items property")
+
+        if isinstance(item_schema, list):
+            raise ValueError("Array schema must have a single items property")
+
         # Handle reference to another schema
-        if "$ref" in item_schema:
-            ref = item_schema["$ref"]
+        if item_schema.ref_:
+            ref = item_schema.ref_
             if ref.startswith("#/components/schemas/"):
                 item_type = ref.split("/")[-1]
         # Handle inline type definition
-        elif "type" in item_schema:
+        elif item_schema.type:
             item_type = self._openapi_type_to_swift(item_schema, True)
 
         # Add array property
@@ -170,7 +180,7 @@ class OpenAPISwiftModelGenerator:
 
         return swift_code
 
-    def _handle_object_schema(self, schema: Dict[str, Any]) -> List[str]:
+    def _handle_object_schema(self, schema: Schema) -> List[str]:
         """
         Handle object type schemas.
 
@@ -179,8 +189,8 @@ class OpenAPISwiftModelGenerator:
             swift_code: The list of Swift code lines being built
             required_props: List of required property names
         """
-        required_props = schema.get("required", [])
-        properties = schema.get("properties", {})
+        required_props = schema.required or []
+        properties = schema.properties or {}
 
         swift_code = []
 
@@ -224,8 +234,8 @@ class OpenAPISwiftModelGenerator:
                 renamed_props[swift_prop_name] = swift_reserved_keywords[swift_prop_name]
                 swift_prop_name = swift_reserved_keywords[swift_prop_name]
 
-            # Check if this property should be unique (using x-unique-key extension)
-            is_unique = prop_schema.get("x-unique-key", False)
+            # Check if this property should be unique (using x_unique_key extension)
+            is_unique = prop_schema.x_unique_key
 
             # Add property with appropriate attributes
             if is_unique:
@@ -272,7 +282,7 @@ class OpenAPISwiftModelGenerator:
 
         return swift_code
 
-    def _generate_dto_struct(self, schema_name: str, schema: Dict[str, Any]) -> str:
+    def _generate_dto_struct(self, schema_name: str, schema: Schema) -> str:
         """
         Generate a Swift DTO struct for an object schema.
 
@@ -284,8 +294,8 @@ class OpenAPISwiftModelGenerator:
             Swift code for a DTO struct
         """
         dto_name = f"{schema_name}DTO"
-        required_props = schema.get("required", [])
-        properties = schema.get("properties", {})
+        required_props = schema.required or []
+        properties = schema.properties or {}
 
         swift_code = [f"struct {dto_name}: Codable, Hashable, Identifiable {{"]
 
@@ -308,7 +318,7 @@ class OpenAPISwiftModelGenerator:
 
         return "\n".join(swift_code)
 
-    def _generate_model_with_dto_conveniences(self, schema_name: str, schema: Dict[str, Any]) -> str:
+    def _generate_model_with_dto_conveniences(self, schema_name: str, schema: Schema) -> str:
         """
         Generate a SwiftData model with convenience methods for working with DTOs.
 
@@ -319,8 +329,8 @@ class OpenAPISwiftModelGenerator:
         Returns:
             Swift code for a SwiftData model with DTO convenience methods
         """
-        required_props = schema.get("required", [])
-        properties = schema.get("properties", {})
+        required_props = schema.required or []
+        properties = schema.properties or {}
         dto_name = f"{schema_name}DTO"
 
         # Start building the Swift class
@@ -358,23 +368,24 @@ class OpenAPISwiftModelGenerator:
         }
 
         # Add property declarations
-        for prop_name, prop_schema in properties.items():
-            swift_type = self._openapi_type_to_swift(prop_schema, prop_name in required_props)
-            swift_prop_name = to_camel_case(prop_name)
+        if properties:
+            for prop_name, prop_schema in properties.items():
+                swift_type = self._openapi_type_to_swift(prop_schema, prop_name in required_props)
+                swift_prop_name = to_camel_case(prop_name)
 
-            # Handle reserved Swift keywords
-            if swift_prop_name in swift_reserved_keywords:
-                renamed_props[swift_prop_name] = swift_reserved_keywords[swift_prop_name]
-                swift_prop_name = swift_reserved_keywords[swift_prop_name]
+                # Handle reserved Swift keywords
+                if swift_prop_name in swift_reserved_keywords:
+                    renamed_props[swift_prop_name] = swift_reserved_keywords[swift_prop_name]
+                    swift_prop_name = swift_reserved_keywords[swift_prop_name]
 
-            # Check if this property should be unique (using x-unique-key extension)
-            is_unique = prop_schema.get("x-unique-key", False) or prop_name == "id"
+                # Check if this property should be unique (using x_unique_key extension)
+                is_unique = prop_schema.x_unique_key or prop_name == "id"
 
-            # Add property with appropriate attributes
-            if is_unique:
-                swift_code.append(f"    @Attribute(.unique) var {swift_prop_name}: {swift_type}")
-            else:
-                swift_code.append(f"    var {swift_prop_name}: {swift_type}")
+                # Add property with appropriate attributes
+                if is_unique:
+                    swift_code.append(f"    @Attribute(.unique) var {swift_prop_name}: {swift_type}")
+                else:
+                    swift_code.append(f"    var {swift_prop_name}: {swift_type}")
 
         # Add standard initializer
         swift_code.append("")
@@ -472,7 +483,8 @@ class OpenAPISwiftModelGenerator:
             raise ValueError(f"Schema {schema_name} not found")
 
         # Handle enums separately - they should not be SwiftData models
-        if "enum" in schema:
+        # Check for the presence of enum values rather than an explicit "enum" type
+        if schema.enum is not None and len(schema.enum) > 0:
             enum_code = self._handle_enum_schema(schema)
             # Replace "Value" with the actual schema name in the enum definition
             enum_code = [
@@ -485,13 +497,13 @@ class OpenAPISwiftModelGenerator:
             return "\n".join(enum_code)
 
         # For object types, generate both a DTO and a SwiftData model
-        if schema.get("type") == "object" and "properties" in schema:
+        if schema.type == "object" and schema.properties:
             dto_code = self._generate_dto_struct(schema_name, schema)
             model_code = self._generate_model_with_dto_conveniences(schema_name, schema)
             return f"{dto_code}\n\n{model_code}"
 
         # For array types, use the existing array schema handler
-        if schema.get("type") == "array" and "items" in schema:
+        if schema.type == "array" and schema.items:
             swift_code = ["@Model"]
             swift_code.append(f"final class {schema_name} {{")
             swift_code.extend(self._handle_array_schema(schema))
@@ -505,7 +517,7 @@ class OpenAPISwiftModelGenerator:
         swift_code.append("}")
         return "\n".join(swift_code)
 
-    def _openapi_type_to_swift(self, prop_schema: Dict[str, Any], is_required: bool) -> str:
+    def _openapi_type_to_swift(self, prop_schema: JSONSchema, is_required: bool) -> str:
         """
         Converts an OpenAPI property type to a Swift type.
 
@@ -516,59 +528,89 @@ class OpenAPISwiftModelGenerator:
         Returns:
             str: The corresponding Swift type
         """
+
+        # Type mapping dictionaries
+        def get_swift_type(schema_type: EnumSchemaType | list[EnumSchemaType]) -> str:
+            if isinstance(schema_type, list):
+                schema_type = schema_type[0]
+            match schema_type:
+                case EnumSchemaType.STRING:
+                    return "String"
+                case EnumSchemaType.INTEGER:
+                    return "Int"
+                case EnumSchemaType.NUMBER:
+                    return "Double"
+                case EnumSchemaType.BOOLEAN:
+                    return "Bool"
+                case EnumSchemaType.OBJECT:
+                    return "Dictionary<String, Any>"
+                case _:
+                    return "Any"
+
+        # Handle string formats
+        format_mapping = {"date": "Date", "date-time": "Date", "uuid": "UUID", "email": "String", "uri": "URL"}
+
         # Handle anyOf with schema reference and null
-        if "anyOf" in prop_schema:
-            # Look for a schema reference in the anyOf array
+        if prop_schema.anyOf:
+            # Look for a schema reference or type in the anyOf array
             ref_type = None
+            simple_type = None
             has_null = False
 
-            for option in prop_schema["anyOf"]:
-                if "$ref" in option:
-                    ref = option["$ref"]
+            for option in prop_schema.anyOf:
+                if option.ref_:
+                    ref = option.ref_
                     if ref.startswith("#/components/schemas/"):
                         ref_type = ref.split("/")[-1]
-                elif option.get("type") == "null":
+                elif option.type == "null":
                     has_null = True
+                elif option.type and not ref_type:
+                    # Handle simple types (string, integer, etc.)
+                    if option.type == "array" and option.items:
+                        # Handle array types in anyOf
+                        item_type = "Any"
+                        if isinstance(option.items, JSONSchema):
+                            if option.items.type:
+                                item_type = self._openapi_type_to_swift(option.items, True)
+                        simple_type = f"[{item_type}]"
+                    else:
+                        # Extract the type as a string
+                        simple_type = get_swift_type(option.type)
 
-            # If we found a reference and null type, it's an optional reference
+            # Return the appropriate type based on what we found
             if ref_type:
                 # If nullable or explicitly not required, make it optional
                 if has_null or not is_required:
                     return str(f"{ref_type}?")
                 return str(ref_type)
+            elif simple_type:
+                # Handle simple types
+                if has_null or not is_required:
+                    return str(f"{simple_type}?")
+                return str(simple_type)
 
         # Handle direct references to other schemas
-        if "$ref" in prop_schema:
-            ref = prop_schema["$ref"]
+        if prop_schema.ref_:
+            ref = prop_schema.ref_
             if ref.startswith("#/components/schemas/"):
                 ref_type = ref.split("/")[-1]
                 return f"{ref_type}{'?' if not is_required else ''}"
 
         # Handle arrays
-        if prop_schema.get("type") == "array" and "items" in prop_schema:
-            item_type = self._openapi_type_to_swift(prop_schema["items"], True)  # Array items are always required
+        if prop_schema.type == "array" and prop_schema.items and isinstance(prop_schema.items, JSONSchema):
+            item_type = self._openapi_type_to_swift(prop_schema.items, True)  # Array items are always required
             return f"[{item_type}]{'?' if not is_required else ''}"
 
-        # Handle primitive types
-        type_mapping = {
-            "string": "String",
-            "integer": "Int",
-            "number": "Double",
-            "boolean": "Bool",
-            "object": "Dictionary<String, Any>",  # Generic object
-        }
+        # Get the base type as a string
+        swift_type = "Any"
+        if prop_schema.type:
+            swift_type = get_swift_type(prop_schema.type)
 
-        # Handle string formats
-        format_mapping = {"date": "Date", "date-time": "Date", "uuid": "UUID", "email": "String", "uri": "URL"}
-
-        # Get the base type
-        openapi_type = prop_schema.get("type", "object")
-        swift_type = type_mapping.get(openapi_type, "Any")
-
-        # Apply format if available
-        if openapi_type == "string" and "format" in prop_schema:
-            format_type = prop_schema["format"]
-            swift_type = format_mapping.get(format_type, swift_type)
+        # Apply format if available for string types
+        if swift_type == "String" and prop_schema.format:
+            format_str = str(prop_schema.format)
+            if format_str in format_mapping:
+                swift_type = format_mapping[format_str]
 
         # Add optionality if not required
         if not is_required:

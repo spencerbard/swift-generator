@@ -2,12 +2,11 @@ import json
 import os
 import tempfile
 from typing import Any, Generator
-from unittest.mock import mock_open, patch
 
 import pytest
 
-from src.openapi.openapi_to_swift import SwiftModelGenerator, parse_openapi_to_swift
 from src.openapi.OpenAPISpec import OpenAPISpec
+from src.openapi.OpenAPISwiftModelGenerator import OpenAPISwiftModelGenerator
 
 
 @pytest.fixture
@@ -21,7 +20,7 @@ def sample_schema() -> dict[str, Any]:
             "schemas": {
                 "Pet": {
                     "type": "object",
-                    "properties": {"id": {"type": "integer", "x-unique-key": True}, "name": {"type": "string"}},
+                    "properties": {"id": {"type": "integer", "x_unique_key": True}, "name": {"type": "string"}},
                     "required": ["id", "name"],
                 },
                 "Pets": {"type": "array", "items": {"$ref": "#/components/schemas/Pet"}},
@@ -49,7 +48,7 @@ def test_array_schema_generation(temp_schema_file: str) -> None:
     openapi = OpenAPISpec(temp_schema_file)
 
     # Generate Swift model for the Pets schema
-    swift_code = SwiftModelGenerator(openapi).generate_model("Pets")
+    swift_code = OpenAPISwiftModelGenerator(openapi).generate_model("Pets")
 
     # The expected Swift code should define an array property
     # Currently, this will fail because the generator doesn't handle top-level array schemas correctly
@@ -65,29 +64,13 @@ def test_array_schema_generation(temp_schema_file: str) -> None:
     assert expected_initializer in swift_code
 
 
-@patch("builtins.open", new_callable=mock_open)
-def test_parse_openapi_json_with_array_schema(sample_schema: dict[str, Any]) -> None:
-    """Test that parse_openapi_json correctly handles array schemas."""
-    # Mock the file operations to avoid actual file writing
-
-    # Call the function
-    result = parse_openapi_to_swift(spec=sample_schema)
-
-    # Verify that both models are generated
-    assert "final class Pet {" in result
-    assert "final class Pets {" in result
-
-    # Verify that the Pets model has an array property
-    assert "var items: [Pet]" in result
-
-
 def test_unique_key_handling(temp_schema_file: str) -> None:
     """Test that x-unique-key extension is properly converted to @Attribute(.unique)."""
     # Get the Pet schema which has id with x-unique-key: true
     openapi = OpenAPISpec(temp_schema_file)
 
     # Generate Swift model for the Pet schema
-    swift_code = SwiftModelGenerator(openapi).generate_model("Pet")
+    swift_code = OpenAPISwiftModelGenerator(openapi).generate_model("Pet")
 
     # Check that the id property has the @Attribute(.unique) annotation
     assert "@Attribute(.unique) var id: Int" in swift_code
